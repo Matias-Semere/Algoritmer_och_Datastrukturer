@@ -51,18 +51,11 @@ public class LinkedList<T> implements List<T> {
     }
 
     public T removeFirst() {
-        if (head == null)
-            throw new ListEmptyException("Den är ju tom ");
-        else if (size == 1) {
-            T data = head.data;
-            head = null;
-            size--;
-            return data;
-        }
-        Node<T> current = head;
+        if (head == null) throw new ListEmptyException("Den är ju tom ");
+        T data = head.data;
         head = head.next;
         size--;
-        return current.data;
+        return data;
     }
 
     public T removeLast() {
