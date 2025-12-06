@@ -12,11 +12,60 @@ public class Benchmark {
                         System.err.println("Error loading data file: " + e.getMessage());
                         return;
                 }
+                int numberOfSearches = 10000;
+                int[] sizes = { 100, 1000, 5000, 10000, 50000, 100000};
 
                 String l = "%-10s|";
 
                 System.out.printf(l + l + l + " (Time in nanosecounds)\n", "Size", "BST     ", "ArrayList");
 
+                Random random = new Random();
+                int[] searchKeys = new int[numberOfSearches];
+                int maxActualSize = Math.min(sizes[sizes.length - 1], allData.size());
+
+                for (int i = 0; i < numberOfSearches; i++) {
+                        if (i % 2 == 0 && maxActualSize > 0) {
+                                searchKeys[i] = allData.get(random.nextInt(maxActualSize));
+                        } else {
+                                searchKeys[i] = random.nextInt(Integer.MAX_VALUE);
+                        }
+                }
+
+                for (int size : sizes) {
+                        runBenchmark(size, numberOfSearches, allData, searchKeys);
+                }
+
+        }
+
+        private static void runBenchmark(int size, int numberOfSearches, ArrayList<Integer> dataSource, int[] searchKeys) {
+                BinarySearchTree<Integer> bst = new BinarySearchTree<>();
+                ArrayList<Integer> arrayList = new ArrayList<>();
+
+                int actualSize = Math.min(size, dataSource.size());
+
+                for (int i = 0; i < actualSize; i++) {
+                        int value = dataSource.get(i);
+                        bst.addElement(value);
+                        arrayList.add(value);
+                }
+
+                long startTime = System.nanoTime();
+                for (int key : searchKeys) {
+                        bst.searchElement(key);
+                }
+                long stopTime = System.nanoTime();
+                long bstDuration = (stopTime - startTime) / numberOfSearches;
+
+                startTime = System.nanoTime();
+                for (int key : searchKeys) {
+                        arrayList.contains(key);
+                }
+                long stopTime2 = System.nanoTime();
+                long listDuration = (stopTime2 - startTime) / numberOfSearches;
+
+                String l = "%-9d |";
+
+                System.out.printf(l + l + l + "\n", actualSize, bstDuration, listDuration);
         }
 
         private static ArrayList<Integer> loadDataFromFile(String filename) throws IOException {
@@ -30,7 +79,8 @@ public class Benchmark {
                         if (!line.isEmpty()) {
                                 try {
                                         data.add(Integer.parseInt(line));
-                                } catch (NumberFormatException e) {}
+                                } catch (NumberFormatException e) {
+                                }
                         }
                         line = reader.readLine();
                 }
