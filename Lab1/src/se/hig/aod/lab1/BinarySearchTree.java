@@ -41,6 +41,21 @@ public class BinarySearchTree<T extends Comparable<? super T>> implements Search
                 return result != null ? result.data : null;
         }
 
+        @Override
+        public String toString() {
+                StringBuilder sb = new StringBuilder();
+                recursiveToString(root, sb);
+                return sb.toString();
+        }
+
+        private void recursiveToString(Treenode current, StringBuilder sb) {
+                if (current != null) {
+                        recursiveToString(current.left, sb);
+                        sb.append(current.data);
+                        recursiveToString(current.right, sb);
+                }
+        }
+
         private Treenode recursiveSearch(Treenode current, T elementToFind) {
                 if (current == null) {
                         return null;
