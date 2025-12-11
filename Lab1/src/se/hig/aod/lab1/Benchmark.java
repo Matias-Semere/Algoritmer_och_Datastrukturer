@@ -3,8 +3,19 @@ package se.hig.aod.lab1;
 import java.io.*;
 import java.util.*;
 
+/**
+ * A benchmarking utility for measuring BinarySearchTree performance.
+ * 
+ * @author Matias Semere
+ * @version 1.0
+ */
 public class Benchmark {
-
+        /**
+         * The main entry point for the benchmark application.
+         * 
+         * @param args command line arguments (not used)
+         * @throws IOException if there's an error reading the data file
+         */
         public static void main(String[] args) throws IOException {
                 ArrayList<Integer> allData = null;
                 try {
@@ -13,54 +24,60 @@ public class Benchmark {
                         System.err.println("Error loading data file: " + e.getMessage());
                         return;
                 }
-                int[] sizesToTry = {10_000, 20_000, 40_000, 80_000, 160_000, 320_000, 640_000, 1_280_000, 2_560_000};
-                int[] avgSizeTimes = new int[sizesToTry.length];
+                final int[] sizesToTry = {10_000, 20_000, 40_000, 80_000, 160_000, 320_000, 640_000, 1_280_000, 2_560_000};
+                double[] avgSizeTimes = new double[sizesToTry.length];
                 int index = 0;
 
                 for (int size : sizesToTry) {
-                        size = Math.min(size, allData.size());
                         BinarySearchTree<Integer> tree = new BinarySearchTree<>();
-                        int maxElement = 0;
-
+                        
                         for (int i = 0; i < size; i++) {
-                                int temp = allData.get(i);
-                                if (temp > maxElement) maxElement = temp;
-                                tree.addElement(temp);
+                                tree.addElement(allData.get(i));
                         }
-
+                        
                         int totalTime = 0;
-                        for (int i = 0; i < 10; i++) {
-                                totalTime += benchmark(tree, size, maxElement);
+                        Collections.shuffle(allData);
+                        for (int i = 1; i < 10; i++) {
+                            totalTime += benchmark(tree, allData);
                         }
                         avgSizeTimes[index] = totalTime / 10;
                         System.out.println("Size: " + size + " Avg time: " + avgSizeTimes[index++] + " ms");
                 }
-
+                
                 System.out.println("Average times for different sizes:");
                 for (int i = 0; i < sizesToTry.length-1; i++) {
-                        System.out.println(sizesToTry[i] / avgSizeTimes[i+1]);
+                        System.out.println(avgSizeTimes[i+1] / avgSizeTimes[i]);
                 }
-
+                
         }
-
-        public static int benchmark(BinarySearchTree<Integer> tree, int size, int maxElement) {
-                Random random = new Random(42);
-                long sökningTid = 0;
-
-                // upvärmning
-                for (int i = 0; i < size; i++) {
-                        tree.searchElement(random.nextInt(maxElement));
-                }
-
+        
+        /**
+         * Performs a single benchmark iteration by searching for all elements.
+         * 
+         * @param tree the BinarySearchTree to perform searches on
+         * @param allData the list of elements to search from
+         * @return the total time in milliseconds taken to complete all searches
+         */
+        public static int benchmark(BinarySearchTree<Integer> tree, List<Integer> allData) {
+                int totalTid = 0;
+                
                 long start = System.currentTimeMillis();
-                for (int i = 0; i < size; i++) {
-                        tree.searchElement(random.nextInt(maxElement));
+                for (int element : allData) {
+                        tree.searchElement(element);
                 }
                 long end = System.currentTimeMillis();
-                sökningTid += end - start;
-                return (int) sökningTid;
+                long sökningTid = end - start;
+                totalTid += sökningTid;
+                return totalTid;
         }
 
+        /**
+         * Loads a list of integers from a text file.
+         * 
+         * @param filename the path to the file containing integers, one per line
+         * @return an ArrayList containing all successfully parsed integers from the file
+         * @throws IOException if there's an error reading the file
+         */
         private static ArrayList<Integer> loadListFromFile(String filename) throws IOException {
                 ArrayList<Integer> data = new ArrayList<>();
                 Scanner reader = new Scanner(new File(filename));

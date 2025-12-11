@@ -57,8 +57,6 @@ public class BinarySearchTreeTest {
                 charBst.addElement('c');
                 charBst.addElement('e');
                 charBst.addElement('g');
-
-                // Expected order: abcdefg
                 assertEquals("abcdefg", charBst.toString());
         }
 
