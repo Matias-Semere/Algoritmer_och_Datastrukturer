@@ -9,6 +9,13 @@
                         "name": "Benchmark",
                         "request": "launch",
                         "mainClass": "se.hig.aod.lab1.Benchmark",
+                        "projectName": "Algo Labbar_626e8fef"
+                },
+                {
+                        "type": "java",
+                        "name": "Benchmark",
+                        "request": "launch",
+                        "mainClass": "se.hig.aod.lab1.Benchmark",
                         "projectName": "Laboration0_6f200fa3"
                 },
                 {

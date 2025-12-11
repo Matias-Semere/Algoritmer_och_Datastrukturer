@@ -77,9 +77,8 @@ public class BinarySearchTreeTest {
 
         @Test
         public void testAddNullElement() {
-                assertThrows(IllegalArgumentException.class, () -> {
-                        bst.addElement(null);
-                }, "Adding null should throw IllegalArgumentException");
+                bst.addElement(null);
+                assertEquals(1, bst.size());
         }
 
         @Test

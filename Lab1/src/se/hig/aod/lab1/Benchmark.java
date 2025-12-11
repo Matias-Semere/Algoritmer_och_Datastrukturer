@@ -4,71 +4,43 @@ import java.io.*;
 import java.util.*;
 
 public class Benchmark {
-        public static void main(String[] args) {
+
+        public static void main(String[] args) throws IOException {
                 ArrayList<Integer> allData = null;
                 try {
-                        allData = loadDataFromFile("Lab1/Data/unique_integers.txt");
+                        allData = loadListFromFile("Lab1/Data/unique_integers.txt");
                 } catch (IOException e) {
                         System.err.println("Error loading data file: " + e.getMessage());
                         return;
                 }
-                int numberOfSearches = 10000;
-                int[] sizes = { 100, 1000, 5000, 10000, 50000, 100000};
-
-                String l = "%-10s|";
-
-                System.out.printf(l + l + l + " (Time in nanosecounds)\n", "Size", "BST     ", "ArrayList");
-
-                Random random = new Random();
-                int[] searchKeys = new int[numberOfSearches];
-                int maxActualSize = Math.min(sizes[sizes.length - 1], allData.size());
-
-                for (int i = 0; i < numberOfSearches; i++) {
-                        if (i % 2 == 0 && maxActualSize > 0) {
-                                searchKeys[i] = allData.get(random.nextInt(maxActualSize));
-                        } else {
-                                searchKeys[i] = random.nextInt(Integer.MAX_VALUE);
+                int[] sizesToTry = {10_000, 20_000, 40_000, 80_000, 160_000, 320_000, 640_000, 1_280_000, 2_560_000};      
+                for (int size : sizesToTry) {
+                        size = Math.min(size, allData.size());
+                        BinarySearchTree<Integer> tree = new BinarySearchTree<>();
+                        for (int i = 0; i < size; i++) {
+                                tree.addElement(allData.get(i));
+                        }
+                        int totalTidFörVarjeSize = 0;
+                        for (int i = 0; i < 10; i++) {
+                                totalTidFörVarjeSize += benchmark(allData, size);
                         }
                 }
 
-                for (int size : sizes) {
-                        runBenchmark(size, numberOfSearches, allData, searchKeys);
-                }
+        }
+
+        public static int benchmark(List<Integer> list, int size) {
+                int sökningTid = 0;
+                long start = System.currentTimeMillis();
+
+
+                
+                
+                long end = System.currentTimeMillis();
+                return sökningTid;
 
         }
 
-        private static void runBenchmark(int size, int numberOfSearches, ArrayList<Integer> dataSource, int[] searchKeys) {
-                BinarySearchTree<Integer> bst = new BinarySearchTree<>();
-                ArrayList<Integer> arrayList = new ArrayList<>();
-
-                int actualSize = Math.min(size, dataSource.size());
-
-                for (int i = 0; i < actualSize; i++) {
-                        int value = dataSource.get(i);
-                        bst.addElement(value);
-                        arrayList.add(value);
-                }
-
-                long startTime = System.nanoTime();
-                for (int key : searchKeys) {
-                        bst.searchElement(key);
-                }
-                long stopTime = System.nanoTime();
-                long bstDuration = (stopTime - startTime) / numberOfSearches;
-
-                startTime = System.nanoTime();
-                for (int key : searchKeys) {
-                        arrayList.contains(key);
-                }
-                long stopTime2 = System.nanoTime();
-                long listDuration = (stopTime2 - startTime) / numberOfSearches;
-
-                String l = "%-9d |";
-
-                System.out.printf(l + l + l + "\n", actualSize, bstDuration, listDuration);
-        }
-
-        private static ArrayList<Integer> loadDataFromFile(String filename) throws IOException {
+        private static ArrayList<Integer> loadListFromFile(String filename) throws IOException {
                 ArrayList<Integer> data = new ArrayList<>();
                 BufferedReader reader = new BufferedReader(new FileReader(filename));
 
