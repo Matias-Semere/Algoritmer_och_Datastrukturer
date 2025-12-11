@@ -13,48 +13,65 @@ public class Benchmark {
                         System.err.println("Error loading data file: " + e.getMessage());
                         return;
                 }
-                int[] sizesToTry = {10_000, 20_000, 40_000, 80_000, 160_000, 320_000, 640_000, 1_280_000, 2_560_000};      
+                int[] sizesToTry = {10_000, 20_000, 40_000, 80_000, 160_000, 320_000, 640_000, 1_280_000, 2_560_000};
+                int[] avgSizeTimes = new int[sizesToTry.length];
+                int index = 0;
+
                 for (int size : sizesToTry) {
                         size = Math.min(size, allData.size());
                         BinarySearchTree<Integer> tree = new BinarySearchTree<>();
+                        int maxElement = 0;
+
                         for (int i = 0; i < size; i++) {
-                                tree.addElement(allData.get(i));
+                                int temp = allData.get(i);
+                                if (temp > maxElement) maxElement = temp;
+                                tree.addElement(temp);
                         }
-                        int totalTidFörVarjeSize = 0;
+
+                        int totalTime = 0;
                         for (int i = 0; i < 10; i++) {
-                                totalTidFörVarjeSize += benchmark(allData, size);
+                                totalTime += benchmark(tree, size, maxElement);
                         }
+                        avgSizeTimes[index] = totalTime / 10;
+                        System.out.println("Size: " + size + " Avg time: " + avgSizeTimes[index++] + " ms");
+                }
+
+                System.out.println("Average times for different sizes:");
+                for (int i = 0; i < sizesToTry.length-1; i++) {
+                        System.out.println(sizesToTry[i] / avgSizeTimes[i+1]);
                 }
 
         }
 
-        public static int benchmark(List<Integer> list, int size) {
-                int sökningTid = 0;
+        public static int benchmark(BinarySearchTree<Integer> tree, int size, int maxElement) {
+                Random random = new Random(42);
+                long sökningTid = 0;
+
+                // upvärmning
+                for (int i = 0; i < size; i++) {
+                        tree.searchElement(random.nextInt(maxElement));
+                }
+
                 long start = System.currentTimeMillis();
-
-
-                
-                
+                for (int i = 0; i < size; i++) {
+                        tree.searchElement(random.nextInt(maxElement));
+                }
                 long end = System.currentTimeMillis();
-                return sökningTid;
-
+                sökningTid += end - start;
+                return (int) sökningTid;
         }
 
         private static ArrayList<Integer> loadListFromFile(String filename) throws IOException {
                 ArrayList<Integer> data = new ArrayList<>();
-                BufferedReader reader = new BufferedReader(new FileReader(filename));
-
-                String line = reader.readLine();
-
-                while (line != null) {
-                        line = line.trim();
+                Scanner reader = new Scanner(new File(filename));
+                String line;
+                while (reader.hasNextLine()) {
+                        line = reader.nextLine().trim();
                         if (!line.isEmpty()) {
                                 try {
                                         data.add(Integer.parseInt(line));
-                                } catch (NumberFormatException e) {
-                                }
+                                } catch (NumberFormatException e) {}
                         }
-                        line = reader.readLine();
                 }
                 reader.close();
                 System.out.println("Loaded " + data.size() + " integers from " + filename + "\n");
