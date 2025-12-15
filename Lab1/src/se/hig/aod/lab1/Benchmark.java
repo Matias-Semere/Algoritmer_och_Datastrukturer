@@ -24,7 +24,8 @@ public class Benchmark {
                         System.err.println("Error loading data file: " + e.getMessage());
                         return;
                 }
-                final int[] sizesToTry = {10_000, 20_000, 40_000, 80_000, 160_000, 320_000, 640_000, 1_280_000, 2_560_000};
+                // final int[] sizesToTry = {10_000, 20_000, 40_000, 80_000, 160_000, 320_000, 640_000, 1_280_000, 2_560_000};
+                final int[] sizesToTry = {10_000, 20_000};
                 double[] avgSizeTimes = new double[sizesToTry.length];
                 int index = 0;
 
@@ -36,11 +37,14 @@ public class Benchmark {
                         }
                         
                         int totalTime = 0;
-                        Collections.shuffle(allData);
-                        for (int i = 1; i < 10; i++) {
+                        // Collections.shuffle(allData);
+                        Collections.sort(allData);
+
+                        for (int i = 0; i < 3; i++) {
+                                // System.out.println(i+1);
                             totalTime += benchmark(tree, allData);
                         }
-                        avgSizeTimes[index] = totalTime / 10;
+                        avgSizeTimes[index] = totalTime / 3;
                         System.out.println("Size: " + size + " Avg time: " + avgSizeTimes[index++] + " ms");
                 }
                 
