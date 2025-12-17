@@ -13,7 +13,7 @@ import org.junit.jupiter.api.Test;
  */
 class HeapPriorityQueueTest {
 
-	static final Integer[] INT_FIXTURE = { 1, 3, 5, 7, 9 }; // TODO fill with random integers
+	static final Integer[] INT_FIXTURE = { 9, 8, 7, 6, 4 }; // TODO fill with random integers
 
 	HeapPriorityQueue<Integer> nonEmptyQueue;
 	HeapPriorityQueue<Integer> emptyQueue;
@@ -91,8 +91,8 @@ class HeapPriorityQueueTest {
 
 	@Test
 	void testDequeueNonEmptyQueue() {
-		assertEquals(1, nonEmptyQueue.dequeue(), "nonEmptyQueue should return the first element");
-		assertEquals(3, nonEmptyQueue.dequeue(), "nonEmptyQueue should return the second element");
+		assertEquals(9, nonEmptyQueue.dequeue(), "nonEmptyQueue should return the first element");
+		assertEquals(8, nonEmptyQueue.dequeue(), "nonEmptyQueue should return the second element");
 	}
 
 	@Test
@@ -120,8 +120,8 @@ class HeapPriorityQueueTest {
 
 	@Test
 	void testGetFrontNonEmptyQueue() {
-		assertEquals(1, nonEmptyQueue.getFront(), "nonEmptyQueue should return the first element and not remove it");
-		assertEquals(1, nonEmptyQueue.getFront(), "nonEmptyQueue should return the first element again");
+		assertEquals(9, nonEmptyQueue.getFront(), "nonEmptyQueue should return the first element and not remove it");
+		assertEquals(9, nonEmptyQueue.getFront(), "nonEmptyQueue should return the first element again");
 	}
 
 }

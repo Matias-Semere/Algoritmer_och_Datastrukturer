@@ -60,8 +60,9 @@ public class HeapPriorityQueue<T extends Comparable<? super T>> implements Prior
 	}
 
 	private void reHeapUp(int currentIndex) {
+		if (currentIndex <= 0) return;
 		int parent = parent(currentIndex);
-		if (heap[currentIndex].compareTo(heap[parent]) < 0) {
+		if (heap[currentIndex].compareTo(heap[parent]) > 0) {
 			T tmp = heap[currentIndex];
 			heap[currentIndex] = heap[parent];
 			heap[parent] = tmp;
@@ -107,12 +108,14 @@ public class HeapPriorityQueue<T extends Comparable<? super T>> implements Prior
 		if (isEmpty()) {
 			throw new PriorityQueueEmptyException("Cannot dequeue empty Queue!");
 		} else {
-			T dequeuedElement = heap[0];// the root element of the heap
-
+			T dequeuedElement = heap[0];
+			T lastElement = heap[size - 1];
+			heap[0] = lastElement;
+			heap[size - 1] = null;
 			// TODO Code that moves the last element in the heap to the root of the heap
 			size--;
+			reHeapDown(0);
 			// TODO reHeapDown for the new root of the heap
-
 			return dequeuedElement;
 		}
 	}

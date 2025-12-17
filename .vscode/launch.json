@@ -6,6 +6,13 @@
         "configurations": [
                 {
                         "type": "java",
+                        "name": "SortingTest",
+                        "request": "launch",
+                        "mainClass": "se.hig.aod.lab3.SortingTest",
+                        "projectName": "Algo Labbar_626e8fef"
+                },
+                {
+                        "type": "java",
                         "name": "Benchmark",
                         "request": "launch",
                         "mainClass": "se.hig.aod.lab1.Benchmark",

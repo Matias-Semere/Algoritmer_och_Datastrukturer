@@ -18,7 +18,6 @@ public class HeapSorter {
                         sortedList.add(heap.dequeue());
                 }
 
-
                 return sortedList;
         }
 
